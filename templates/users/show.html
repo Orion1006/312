@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="my-5">Просмотр данных пользователя</h1>
+
+<table class="table mt-3">
+    <tbody>
+        <tr>
+            <td>Логин</td>
+            <td>{{ user.login }}</td>
+        </tr>
+        <tr>
+            <td>Фамилия</td>
+            <td>{{ user.last_name }}</td>
+        </tr>
+        <tr>
+            <td>Имя</td>
+            <td>{{ user.first_name }}</td>
+        </tr>
+        
+        <tr>
+            <td>Отчество</td>
+            <td>{{ user.middle_name or '' }}</td>
+        </tr>
+        <tr>
+            <td>Роль</td>
+            <td>{{ role.name }}</td>
+        </tr>
+    </tbody>
+</table>
+<h3>Мои рецензии</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Оценка</th>
+            <th>Текст рецензии</th>
+        </tr>
+    </thead> 
+    <tbody>
+    {% for review in reviews %}
+        <tr>
+            <td>{{ review.name }}</td>
+            <td>{{ review.rating }}</td>
+            <td>{{ review.review_text }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

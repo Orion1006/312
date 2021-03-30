@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% from 'pagination.html' import render_pagination %}
+{% block content %}
+
+<h1 class="my-5">Список фильмов</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Постер</th>
+      <th>Название</th>
+      <th>Жанр</th>
+      <th>Год производства</th>
+      <th>Количество рецензий</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for film in films %}
+    <tr>
+      <td> {{ film.poster }} </td>
+      <td class="film-name"> {{ film.name }} </td>
+      <td> {{ film.genre }} </td>
+      <td> {{ film.prod_year }} </td>
+      <td> {{ film.review_number }} </td>
+      <td>
+        <div class="btn-group">
+          <a class="btn btn-secondary" href="{{ url_for('show', film_id=film.id) }}">Просмотр</a>
+          {% if current_user.is_authenticated %}
+          {% if current_user.can('edit', record=user) %}
+          <a class="btn btn-primary" href="{{ url_for('edit', film_id=film.id) }}">Редактировать</a>
+          {% endif %}
+          {% if current_user.can('delete', record=user) %}
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-film-modal"
+            data-url="{{ url_for('delete', film_id=film.id) }}">
+            Удалить
+          </button>
+          {% endif %}
+          {% endif %}
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{{ render_pagination(request.endpoint, pagination_info) }}
+{% if current_user.is_authenticated and current_user.can('new') %}
+<a class="btn btn-primary" href="{{ url_for('new') }}">Добавить фильм</a>
+{% endif %}
+
+<div class="modal" tabindex="-1" role="dialog" id="delete-film-modal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Удаление записи</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Вы уверены, что хотите удалить данную запись <span id="film-name"></span>?</p>
+        <form action="" method="POST" class="d-none">
+          <input id="delete-btn" type="submit">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <label for="delete-btn" class="btn btn-danger mb-0 cursor-pointer">Да</label>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

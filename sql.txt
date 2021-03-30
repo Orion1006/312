@@ -1,0 +1,69 @@
+CREATE TABLE exam_films (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) NOT NULL,
+    description text not null,
+    prod_year year not null,
+    country varchar(50) not null,
+    producer varchar(50) not null,
+    screenwriter varchar(50) not null,
+    actors varchar(255) not null,
+    duration int not null,
+    poster_id int not null,
+    FOREIGN KEY (poster_id) REFERENCES exam_posters(id) ON DELETE CASCADE)
+    ENGINE INNODB;
+
+
+
+
+create table exam_posters ( 
+    id int PRIMARY KEY AUTO_INCREMENT,
+    filename varchar(255) not null,
+    mime_type varchar(255) not null,
+    md5_hash varchar(255) not null)
+ENGINE INNODB;
+
+
+CREATE TABLE exam_roles (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) not null,
+    description text not null)
+    ENGINE INNODB;
+
+
+CREATE TABLE exam_users (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    login varchar(50) not null,
+    password_hash varchar(256) not null,
+    last_name varchar(50) NOT null,
+    first_name varchar(50) NOT null,
+    middle_name varchar(50),
+    role_id int,
+    FOREIGN KEY (role_id) REFERENCES exam_roles(id))
+    ENGINE INNODB;
+
+
+CREATE TABLE exam_review(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    film_id int,
+    user_id int,
+    rating int not null,
+    review_text text not null,
+    review_date timestamp DEFAULT CURRENT_TIMESTAMP NOT null,
+	FOREIGN KEY (film_id) REFERENCES exam_films (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES exam_users (id))
+    ENGINE INNODB;
+
+
+
+CREATE TABLE exam_genre (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) not null UNIQUE)
+    ENGINE INNODB;
+
+
+CREATE TABLE film_genre (
+    film_id int,
+    genre_id int,
+    FOREIGN KEY (film_id) REFERENCES exam_films(id),
+    FOREIGN KEY (genre_id) REFERENCES exam_genre(id))
+    ENGINE INNODB;

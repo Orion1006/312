@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="my-5">Просмотр данных фильма</h1>
+
+<table class="table mt-3">
+    <tbody>
+        <tr>
+            <td>Постер</td>
+            <td>{{ film.poster }}</td>
+        </tr>
+        <tr>
+            <td>Название</td>
+            <td>{{ film.name }}</td>
+        </tr>
+        <tr>
+            <td>Описание</td>
+            <td>{{ markdown(film.description) | safe }}</td>
+        </tr>
+        <tr>
+            <td>Год производства</td>
+            <td>{{ film.prod_year }}</td>
+        </tr>
+        <tr>
+            <td>Страна</td>
+            <td>{{ film.country }}</td>
+        </tr>
+        <tr>
+            <td>Режиссер</td>
+            <td>{{ film.producer }}</td>
+        </tr>
+        <tr>
+            <td>Сценарист</td>
+            <td>{{ film.screenwriter }}</td>
+        </tr>
+        <tr>
+            <td>Актеры</td>
+            <td>{{ film.actors }}</td>
+        </tr>
+        <tr>
+            <td>Длительность</td>
+            <td>{{ film.duration }}</td>
+        </tr>
+        <tr>
+            <td>Жанр</td>
+            <td>{% for genre in genres %} {{ genre.name }} {% endfor %}</td>
+        </tr>
+    </tbody>
+</table>
+{% for review in reviews %}
+<h5>
+    {{ review.last_name }} {{ review.first_name }} {{ review.middle_name or '' }}
+</h5>
+Оценка: {{ review_rating[review.rating] }}
+<p>
+    {{ review.review_text | safe }}
+</p>
+{% endfor %}
+{% if current_user.is_authenticated and not check_review %}
+    <a class="btn btn-primary" id="review_btn" href="{{ url_for('make_review', film_id=film.id) }}" >
+        Написать рецензию
+    </a>
+{% endif %}
+{% endblock %}
